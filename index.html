@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StockSprout Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <section class="auth-layout" id="authLayout">
+      <div class="auth-showcase">
+        <span class="pill">Inventory intelligence</span>
+        <h1>Run your stock in one simple online workspace.</h1>
+        <p>
+          Alfred Inventory gives your team a clean way to track products, suppliers,
+          stock movement, and change history with a dashboard inspired by modern ERP tools.
+        </p>
+        <div class="showcase-grid">
+          <article class="showcase-card">
+            <strong>Live stock visibility</strong>
+            <span>Monitor low-stock products, new items, and movement trends instantly.</span>
+          </article>
+          <article class="showcase-card">
+            <strong>Fast team actions</strong>
+            <span>Add, edit, restock, release, and review item history from one screen.</span>
+          </article>
+          <article class="showcase-card">
+            <strong>Audit-ready records</strong>
+            <span>Every item change is logged with who changed it, when, and what was updated.</span>
+          </article>
+        </div>
+      </div>
+
+      <div class="auth-panel">
+        <div class="brand-row">
+          <div class="brand-mark brand-logo">
+            <span class="logo-box"></span>
+            <span class="logo-leaf"></span>
+          </div>
+          <div>
+            <h2>StockSprout Studio</h2>
+            <p>Where your products stay organized and ready to grow.</p>
+          </div>
+        </div>
+
+        <div class="auth-tabs">
+          <button class="tab-button active" data-auth-tab="login" type="button">Login</button>
+          <button class="tab-button" data-auth-tab="register" type="button">Register</button>
+          <button class="tab-button" data-auth-tab="forgot" type="button">Forgot Password</button>
+        </div>
+
+        <form id="loginForm" class="auth-form active">
+          <label>
+            Email
+            <input type="email" name="email" placeholder="admin@alfred.com" required>
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" placeholder="Enter your password" required>
+          </label>
+          <button class="primary-button" type="submit">Login to dashboard</button>
+          <p class="form-note">Demo login is prefilled for a quick start.</p>
+        </form>
+
+        <form id="registerForm" class="auth-form">
+          <label>
+            Full name
+            <input type="text" name="name" placeholder="Jamie Stockwell" required>
+          </label>
+          <label>
+            Email
+            <input type="email" name="email" placeholder="you@company.com" required>
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" placeholder="Create a password" required>
+          </label>
+          <button class="primary-button" type="submit">Create account</button>
+          <p class="form-note">New accounts are saved locally in this demo.</p>
+        </form>
+
+        <form id="forgotForm" class="auth-form">
+          <label>
+            Account email
+            <input type="email" name="email" placeholder="Enter your registered email" required>
+          </label>
+          <button class="secondary-button" type="submit">Send reset link</button>
+          <p class="form-note">A mock reset confirmation will appear for this demo workflow.</p>
+        </form>
+
+        <p id="authMessage" class="message-line"></p>
+      </div>
+    </section>
+
+    <main class="dashboard-layout hidden" id="dashboardLayout">
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <div class="brand-mark brand-logo">
+            <span class="logo-box"></span>
+            <span class="logo-leaf"></span>
+          </div>
+          <div>
+            <h2>StockSprout Studio</h2>
+            <p>Online inventory system</p>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <button class="nav-link active" data-section="overview" type="button">Overview</button>
+          <button class="nav-link" data-section="items" type="button">Items</button>
+          <button class="nav-link" data-section="movements" type="button">Movements</button>
+          <button class="nav-link" data-section="history" type="button">Transaction History</button>
+        </nav>
+
+        <div class="sidebar-foot">
+          <div class="user-badge">
+            <span id="currentUserBadge">Admin User</span>
+            <small id="currentUserEmail">admin@alfred.com</small>
+          </div>
+          <button id="logoutButton" class="ghost-button" type="button">Log out</button>
+        </div>
+      </aside>
+
+      <section class="workspace">
+        <header class="workspace-header">
+          <div>
+            <span class="pill">Inventory command center</span>
+            <h1>Simple inventory control with live tracking.</h1>
+            <p>Track stock, manage products, review movements, and keep a full change log in one responsive workspace.</p>
+          </div>
+          <div class="header-actions">
+            <button id="openAddItemButton" class="primary-button" type="button">Add new item</button>
+          </div>
+        </header>
+
+        <section class="section-panel active" id="section-overview">
+          <div class="stats-grid" id="statsGrid"></div>
+          <div class="visual-grid">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Stock by category</h3>
+                  <p>Graphical view of current quantity levels.</p>
+                </div>
+              </div>
+              <div id="categoryChart" class="bar-chart"></div>
+            </article>
+
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Movement summary</h3>
+                  <p>See how stock is moving in and out.</p>
+                </div>
+              </div>
+              <div class="movement-meters">
+                <div class="meter-card">
+                  <span>Stock in</span>
+                  <strong id="stockInTotal">0</strong>
+                  <div class="meter"><div id="stockInBar" class="meter-fill success"></div></div>
+                </div>
+                <div class="meter-card">
+                  <span>Stock out</span>
+                  <strong id="stockOutTotal">0</strong>
+                  <div class="meter"><div id="stockOutBar" class="meter-fill danger"></div></div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="overview-grid">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Low stock alerts</h3>
+                  <p>Products that need attention soon.</p>
+                </div>
+              </div>
+              <div id="lowStockList" class="stack-list"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Recently added items</h3>
+                  <p>Latest products added to your inventory.</p>
+                </div>
+              </div>
+              <div id="recentItemsList" class="stack-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-panel" id="section-items">
+          <div class="panel">
+            <div class="panel-head split">
+              <div>
+                <h3>Item management</h3>
+                <p>Add, edit, delete, search, and filter your products.</p>
+              </div>
+            </div>
+
+            <div class="toolbar">
+              <label class="toolbar-field">
+                Search
+                <input id="searchInput" type="search" placeholder="Search by name or SKU">
+              </label>
+              <label class="toolbar-field">
+                Category
+                <select id="categoryFilter"></select>
+              </label>
+              <label class="toolbar-field">
+                Stock level
+                <select id="stockFilter">
+                  <option value="all">All levels</option>
+                  <option value="low">Low stock only</option>
+                  <option value="normal">Normal stock</option>
+                  <option value="out">Out of stock</option>
+                </select>
+              </label>
+              <label class="toolbar-field">
+                Date added
+                <select id="dateFilter">
+                  <option value="all">Any time</option>
+                  <option value="7">Last 7 days</option>
+                  <option value="30">Last 30 days</option>
+                  <option value="90">Last 90 days</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>SKU</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                    <th>Supplier</th>
+                    <th>Price</th>
+                    <th>Date added</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="inventoryTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-panel" id="section-movements">
+          <div class="movement-layout">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Stock movement tracking</h3>
+                  <p>Update quantities for restocks or outgoing usage.</p>
+                </div>
+              </div>
+              <form id="movementForm" class="movement-form">
+                <label>
+                  Item
+                  <select id="movementItem" required></select>
+                </label>
+                <label>
+                  Type
+                  <select id="movementType" required>
+                    <option value="in">Stock in</option>
+                    <option value="out">Stock out</option>
+                  </select>
+                </label>
+                <label>
+                  Quantity
+                  <input id="movementQuantity" type="number" min="1" placeholder="Enter quantity" required>
+                </label>
+                <label>
+                  Note
+                  <input id="movementNote" type="text" placeholder="Restock or sales note">
+                </label>
+                <button class="primary-button" type="submit">Save movement</button>
+              </form>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Movement log per item</h3>
+                  <p>Review every stock in and stock out update.</p>
+                </div>
+                <label class="inline-filter">
+                  Item
+                  <select id="movementHistoryFilter"></select>
+                </label>
+              </div>
+              <div id="movementHistoryList" class="stack-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-panel" id="section-history">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Transaction history</h3>
+                <p>Every change is recorded with who edited, when, and what changed.</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>When</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Item</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody id="historyTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="itemDialog" class="modal">
+    <form id="itemForm" class="modal-card" method="dialog">
+      <div class="modal-head">
+        <div>
+          <h3 id="itemDialogTitle">Add item</h3>
+          <p>Manage item details, stock information, and image upload.</p>
+        </div>
+        <button id="closeDialogButton" class="icon-button" type="button" aria-label="Close dialog">x</button>
+      </div>
+
+      <input id="itemId" type="hidden">
+
+      <div class="form-grid">
+        <label>
+          Item name
+          <input id="itemName" type="text" required placeholder="Wireless Barcode Scanner">
+        </label>
+        <label>
+          SKU / Code
+          <input id="itemSku" type="text" required placeholder="INV-1001">
+        </label>
+        <label>
+          Category
+          <input id="itemCategory" type="text" required placeholder="Electronics">
+        </label>
+        <label>
+          Quantity
+          <input id="itemQuantity" type="number" min="0" required placeholder="120">
+        </label>
+        <label>
+          Supplier
+          <input id="itemSupplier" type="text" required placeholder="Prime Source Ltd.">
+        </label>
+        <label>
+          Price
+          <input id="itemPrice" type="number" min="0" step="0.01" required placeholder="149.99">
+        </label>
+        <label class="full-span">
+          Upload image
+          <input id="itemImage" type="file" accept="image/*">
+        </label>
+      </div>
+
+      <div class="image-preview-wrap">
+        <img id="imagePreview" alt="Item preview">
+      </div>
+
+      <div class="modal-actions">
+        <button class="secondary-button" type="button" id="cancelDialogButton">Cancel</button>
+        <button class="primary-button" type="submit">Save item</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="script.js"></script>
+</body>
+</html>
